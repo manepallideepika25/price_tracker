@@ -12,9 +12,10 @@
 
         <div class="form-container">
             <h2>Add a New Product</h2>
-            <form action="/add_product" method="post">
+            <form action="{{ url_for('add_product') }}" method="post">
                 <input type="url" name="url" placeholder="Product URL" required>
-                <input type="number" name="threshold_price" step="0.01" placeholder="Target Price" required>
+                <input type="number" name="target_price" step="0.01" placeholder="Target Price" required>
+                <input type="email" name="email" placeholder="Your Email" required>
                 <button type="submit">Add Product</button>
             </form>
         </div>
@@ -26,32 +27,18 @@
                     <tr>
                         <th>Product URL</th>
                         <th>Target Price</th>
-                        <th>Current Price</th>
-                        <th>Last Checked</th>
+                        <th>Email</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for product in products %}
                     <tr>
-                        <td><a href="{{ product.url }}" target="_blank">{{ product.url }}</a></td>
-                        <td>${{ "%.2f"|format(product.threshold_price) }}</td>
+                        <td><a href="{{ product['url'] }}" target="_blank">{{ product['url'] }}</a></td>
+                        <td>₹{{ "%.2f"|format(product['target_price']) }}</td>
+                        <td>{{ product['email'] }}</td>
                         <td>
-                            {% if product.current_price %}
-                                ${{ "%.2f"|format(product.current_price) }}
-                            {% else %}
-                                N/A
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if product.last_checked %}
-                                {{ product.last_checked }}
-                            {% else %}
-                                Never
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="/delete_product/{{ product.id }}" class="delete-btn">Delete</a>
+                            <a href="{{ url_for('delete_product', product_id=product['id']) }}" class="delete-btn">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
